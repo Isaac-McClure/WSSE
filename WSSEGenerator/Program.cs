@@ -1,5 +1,7 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Hosting;
+using System.Runtime.CompilerServices;
+using WSSEGenerator;
 using WSSEGenerator.Models;
 
 
@@ -17,8 +19,10 @@ if (settings == null)
     throw new Exception("Could not bind configuration. Ensure appsettings.json is present and correct.");
 }
 
-// See https://aka.ms/new-console-template for more information
-Console.WriteLine($"API Key: {settings.GoogleApiKey}");
+new WebsiteGenerator(settings.GoogleApiKey).Generate();
 
 await host.RunAsync();
+
+
+
 
