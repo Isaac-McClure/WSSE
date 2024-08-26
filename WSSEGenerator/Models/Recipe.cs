@@ -8,5 +8,6 @@
         public string Protein { get; set; }
         public string CookingTimeInMinutes { get; set; }
         public string Link { get; set; }
+        public bool IsOnlineRecipe { get => this.LinkOrBook.StartsWith("http"); }
     }
 }

@@ -152,10 +152,18 @@ namespace WSSEGenerator
             foreach (var recipe in recipes)
             {
                 var html = detailTemplate.Replace("{{Name}}", recipe.Name);
-                html = html.Replace("{{LinkOrBook}}", recipe.LinkOrBook);// TODO: fix so it's not a link if it;s not a link
                 html = html.Replace("{{Cuisine}}", recipe.Cuisine);
                 html = html.Replace("{{Protein}}", recipe.Protein);
                 html = html.Replace("{{CookingTimeInMinutes}}", recipe.CookingTimeInMinutes);
+
+                if (recipe.IsOnlineRecipe)
+                {
+                    html = html.Replace("{{LinkOrBook}}", $"<div>Link: <a href=\"{recipe.LinkOrBook}\">{recipe.LinkOrBook}</a></div>");
+                }
+                else 
+                {
+                    html = html.Replace("{{LinkOrBook}}", $"<div>Cookbook: {recipe.LinkOrBook}</div>");
+                }
 
                 OutputHtmlFile(recipe.Link, html);
             }
