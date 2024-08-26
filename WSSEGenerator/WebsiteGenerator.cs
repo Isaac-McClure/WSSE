@@ -20,11 +20,6 @@ namespace WSSEGenerator
 
         public async Task Generate()
         {
-
-            // See https://aka.ms/new-console-template for more information
-            Console.WriteLine($"ID: {this.settings.GoogleClientId}");
-            Console.WriteLine($"Secret: {this.settings.GoogleClientSecret}");
-
             // Overall Algorithm:
 
             // Get data from sheets
@@ -38,6 +33,7 @@ namespace WSSEGenerator
             var recipes = await GetRecipeDataFromSheets();
 
             CreateHomePage(recipes);
+            CreateDetailPages(recipes);
 
         }
 
@@ -129,15 +125,28 @@ namespace WSSEGenerator
             string recipeListHtml = "";
             foreach (var recipe in recipes)
             {
-
                 recipeListHtml += $"<li><a href=\"{recipe.Link}\">{recipe.Name}</a></li>\n";
             }
 
             var html = homeTemplate.Replace("{{ListGoesHere}}", recipeListHtml);
 
             OutputHtmlFile("home.html", html);
+        }
 
-            Console.WriteLine(homeTemplate);
+        private void CreateDetailPages(IEnumerable<Recipe> recipes)
+        {
+            string detailTemplate = GetTemplateFile("recipe-detail.html");
+
+            foreach (var recipe in recipes)
+            {
+                var html = detailTemplate.Replace("{{Name}}", recipe.Name);
+                html = html.Replace("{{LinkOrBook}}", recipe.LinkOrBook);
+                html = html.Replace("{{Cuisine}}", recipe.Cuisine);
+                html = html.Replace("{{Protein}}", recipe.Protein);
+                html = html.Replace("{{CookingTimeInMinutes}}", recipe.CookingTimeInMinutes);
+
+                OutputHtmlFile(recipe.Link, html);
+            }
         }
 
         private string GetTemplateFile(string filename)
