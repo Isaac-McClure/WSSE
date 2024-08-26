@@ -76,8 +76,17 @@ namespace WSSEGenerator
             SpreadsheetsResource.ValuesResource.GetRequest request =
                 sheetsService.Spreadsheets.Values.Get(spreadsheetId, range);
 
-            ValueRange response = request.Execute();
-            return response;
+            try
+            {
+                ValueRange response = request.Execute();
+                return response;
+            }
+            catch(Exception ex)
+            {
+                Console.WriteLine("Exception thrown trying to execute request");
+                Console.WriteLine(ex.Message);
+                throw;
+            }
         }
 
         IEnumerable<Recipe> ConvertValueRangeToRecipes(ValueRange valueRange)
