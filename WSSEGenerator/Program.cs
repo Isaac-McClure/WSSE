@@ -16,7 +16,7 @@ if (settings == null)
     throw new Exception("Could not bind configuration. Ensure appsettings.json is present and correct.");
 }
 
-new WebsiteGenerator(settings).Generate();
+await new WebsiteGenerator(settings).Generate();
 
 
 
