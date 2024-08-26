@@ -1,24 +1,24 @@
 ﻿using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Hosting;
+using WSSEGenerator;
 using WSSEGenerator.Models;
 
+var config = new ConfigurationManager();
 
-HostApplicationBuilder builder = Host.CreateApplicationBuilder(args);
+config.Sources.Clear();
 
-builder.Configuration.Sources.Clear();
+config.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+Settings settings = config.Get<Settings>();
 
-builder.Configuration.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
-Settings settings = builder.Configuration.Get<Settings>();
 
-using IHost host = builder.Build();
 
 if (settings == null)
 {
     throw new Exception("Could not bind configuration. Ensure appsettings.json is present and correct.");
 }
 
-// See https://aka.ms/new-console-template for more information
-Console.WriteLine($"API Key: {settings.GoogleApiKey}");
+new WebsiteGenerator(settings).Generate();
 
-await host.RunAsync();
+
+
+
 
