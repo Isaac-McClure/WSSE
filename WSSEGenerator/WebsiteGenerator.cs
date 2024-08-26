@@ -30,11 +30,14 @@ namespace WSSEGenerator
             // Fill out template using the data
             // output
 
+            // For more fun, add home page with random buttons, and add filters to both random and list page.
+
             var recipes = await GetRecipeDataFromSheets();
 
             CreateHomePage(recipes);
             CreateDetailPages(recipes);
-
+            CreateScriptFile();
+            CreateStyleFile();
         }
 
         private async Task<IEnumerable<Recipe>> GetRecipeDataFromSheets()
@@ -125,10 +128,19 @@ namespace WSSEGenerator
             string recipeListHtml = "";
             foreach (var recipe in recipes)
             {
-                recipeListHtml += $"<li><a href=\"{recipe.Link}\">{recipe.Name}</a></li>\n";
+                recipeListHtml += $"<li data-protein=\"{recipe.Protein}\"><a href=\"{recipe.Link}\">{recipe.Name}</a></li>\n";
+            }
+
+            string filterOptionList = "";
+            List<string> protienNames = new List<string> { "Choose a protein" };
+            protienNames.AddRange(recipes.Select(x => x.Protein).Where(y => !string.IsNullOrEmpty(y)).Distinct().ToList());
+            foreach (var proteinOption in protienNames)
+            {
+                filterOptionList += $"<option value=\"{proteinOption}\">{proteinOption}</option>";
             }
 
             var html = homeTemplate.Replace("{{ListGoesHere}}", recipeListHtml);
+            html = html.Replace("{{ProteinOptionListGoesHere}}", filterOptionList);
 
             OutputHtmlFile("home.html", html);
         }
@@ -182,6 +194,21 @@ namespace WSSEGenerator
                 Console.WriteLine($"Failed to write {filename} html file.");
                 throw;
             }
+        }
+
+        private void CreateScriptFile() 
+        {
+            var fromPath = Path.Combine(Directory.GetCurrentDirectory(), "Templates/script.js");
+            var toPath = Path.Combine(Directory.GetCurrentDirectory(), "Output/script.js");
+            FileInfo file = new FileInfo(fromPath);
+            file.CopyTo(toPath, true);
+        }
+        private void CreateStyleFile()
+        {
+            var fromPath = Path.Combine(Directory.GetCurrentDirectory(), "Templates/style.css");
+            var toPath = Path.Combine(Directory.GetCurrentDirectory(), "Output/style.css");
+            FileInfo file = new FileInfo(fromPath);
+            file.CopyTo(toPath, true);
         }
     }
 }

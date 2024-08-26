@@ -12,7 +12,13 @@
         <h1>What should Sarah eat?</h1>
     </header>
     <main>
-        <ul>
+        <div>
+            Filter list by protein: 
+            <select id="proteinFilter" name="proteinFilter" onchange="filterList()">
+                {{ProteinOptionListGoesHere}}
+            </select>
+        </div>
+        <ul id="recipeList">
             {{ListGoesHere}}
         </ul>
     </main>
