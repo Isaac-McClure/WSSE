@@ -5,17 +5,20 @@
     <meta name="description" content="A website to help decide what is for dinner">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
     <title>{{Name}}</title>
 </head>
 <body>
-    <header>
-        <h1>{{Name}}</h1>
+    <header class="center-all">
+        <div class="material-icons clickable header-icon" onclick="navigateToIndex()">home</div><span class="spacer"></span><h1>{{Name}}</h1><span class="spacer"></span>
     </header>
-    <main>
-        {{LinkOrBook}}
-        <div>Cuisine: {{Cuisine}}</div>
-        <div>Protein: {{Protein}}</div>
-        <div>Cooking time in minutes: {{CookingTimeInMinutes}}</div>
+    <main class="center-all">
+        <div>
+            {{LinkOrBook}}
+            <div>Cuisine: {{Cuisine}}</div>
+            <div>Protein: {{Protein}}</div>
+            <div>Cooking time in minutes: {{CookingTimeInMinutes}}</div>
+        </div>
     </main>
     <footer>
     </footer>

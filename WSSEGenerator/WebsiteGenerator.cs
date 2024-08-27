@@ -13,6 +13,10 @@ namespace WSSEGenerator
     internal class WebsiteGenerator
     {
         private Settings settings;
+        private IEnumerable<Recipe> recipes;
+        private string proteinOptions;
+        private string cuisineOptions;
+
         public WebsiteGenerator(Settings settings) 
         {
             this.settings = settings; 
@@ -32,10 +36,12 @@ namespace WSSEGenerator
 
             // For more fun, add home page with random buttons, and add filters to both random and list page.
 
-            var recipes = await GetRecipeDataFromSheets();
+            await GetRecipeDataFromSheets();
+            createFilterOptionLists();
 
-            CreateHomePage(recipes);
-            CreateDetailPages(recipes);
+            CreateHomePage();
+            CreateDetailPages();
+            CreateIndexPage();
             CreateScriptFile();
             CreateStyleFile();
         }
@@ -48,6 +54,7 @@ namespace WSSEGenerator
             ValueRange response = await GetValueRangeFromSheets();
 
             var recipes = ConvertValueRangeToRecipes(response);
+            this.recipes = recipes;
             return recipes;
         }
 
@@ -117,39 +124,72 @@ namespace WSSEGenerator
             return recipes;
         }
 
-        private void CreateHomePage(IEnumerable<Recipe> recipes) 
+        private void CreateHomePage()
         {
-            // Read home into memory
-            // insert list of recipes into template
-            // Write to output
-
-            string homeTemplate = GetTemplateFile("home.html");
+            string fileName = "home.html";
+            string homeTemplate = GetTemplateFile(fileName);
 
             string recipeListHtml = "";
-            foreach (var recipe in recipes)
+            foreach (var recipe in this.recipes)
             {
                 recipeListHtml += $"<li data-protein=\"{recipe.Protein}\"><a href=\"{recipe.Link}\">{recipe.Name}</a></li>\n";
             }
 
+            var html = homeTemplate.Replace("{{ListGoesHere}}", recipeListHtml);
+            html = html.Replace("{{ProteinOptionListGoesHere}}", this.proteinOptions);
+
+            OutputFile(fileName, html);
+        }
+
+        private void CreateIndexPage()
+        {
+            string fileName = "index.html";
+            string homeTemplate = GetTemplateFile(fileName);
+
+            var html = homeTemplate.Replace("{{CuisineOptionList}}", this.cuisineOptions);
+            html = html.Replace("{{ProteinOptionList}}", this.proteinOptions);
+
+            OutputFile(fileName, html);
+        }
+
+        private void createFilterOptionLists()
+        {
+            this.proteinOptions = GetProteinOptionHtmlFromRecipes();
+            this.cuisineOptions = GetCuisineOptionHtmlFromRecipes();
+        }
+
+        private string GetProteinOptionHtmlFromRecipes()
+        {
             string filterOptionList = "";
             List<string> protienNames = new List<string> { "Choose a protein" };
-            protienNames.AddRange(recipes.Select(x => x.Protein).Where(y => !string.IsNullOrEmpty(y)).Distinct().ToList());
+            protienNames.AddRange(this.recipes.Select(x => x.Protein).Where(y => !string.IsNullOrEmpty(y)).Distinct().ToList());
             foreach (var proteinOption in protienNames)
             {
                 filterOptionList += $"<option value=\"{proteinOption}\">{proteinOption}</option>";
             }
-
-            var html = homeTemplate.Replace("{{ListGoesHere}}", recipeListHtml);
-            html = html.Replace("{{ProteinOptionListGoesHere}}", filterOptionList);
-
-            OutputHtmlFile("home.html", html);
+            return filterOptionList;
         }
 
-        private void CreateDetailPages(IEnumerable<Recipe> recipes)
+        private string GetCuisineOptionHtmlFromRecipes()
+        {
+            string filterOptionList = "";
+            List<string> cuisineNames =
+            [
+                "Choose a cuisine",
+                .. this.recipes.Select(x => x.Cuisine).Where(y => !string.IsNullOrEmpty(y)).Distinct().ToList(),
+            ];
+            foreach (var cuisineName in cuisineNames)
+            {
+                filterOptionList += $"<option value=\"{cuisineName}\">{cuisineName}</option>";
+            }
+            return filterOptionList;
+        }
+
+        private void CreateDetailPages()
         {
             string detailTemplate = GetTemplateFile("recipe-detail.html");
 
-            foreach (var recipe in recipes)
+            foreach (var recipe in this.recipes)
             {
                 var html = detailTemplate.Replace("{{Name}}", recipe.Name);
                 html = html.Replace("{{Cuisine}}", recipe.Cuisine);
@@ -165,7 +205,7 @@ namespace WSSEGenerator
                     html = html.Replace("{{LinkOrBook}}", $"<div>Cookbook: {recipe.LinkOrBook}</div>");
                 }
 
-                OutputHtmlFile(recipe.Link, html);
+                OutputFile(recipe.Link, html);
             }
         }
 
@@ -187,30 +227,36 @@ namespace WSSEGenerator
             return template;
         }
 
-        private void OutputHtmlFile(string filename, string html)
+        private void OutputFile(string filename, string contents)
         {
             try
             {
                 // Create output folder if it does not exist
                 var outputPath = Path.Combine(Directory.GetCurrentDirectory(), $"Output/{filename}");
-                System.IO.FileInfo file = new System.IO.FileInfo(outputPath);
-                file.Directory.Create(); // If the directory already exists, this method does nothing.
-                System.IO.File.WriteAllText(file.FullName, html);
+                FileInfo file = new FileInfo(outputPath);
+                file.Directory.Create();
+                File.WriteAllText(file.FullName, contents);
             }
             catch (IOException ex)
             {
-                Console.WriteLine($"Failed to write {filename} html file.");
+                Console.WriteLine($"Failed to write {filename} output file.");
                 throw;
             }
         }
 
         private void CreateScriptFile() 
         {
-            var fromPath = Path.Combine(Directory.GetCurrentDirectory(), "Templates/script.js");
-            var toPath = Path.Combine(Directory.GetCurrentDirectory(), "Output/script.js");
-            FileInfo file = new FileInfo(fromPath);
-            file.CopyTo(toPath, true);
+            string fileName = "script.js";
+            var templateScript = GetTemplateFile(fileName);
+
+            var recipesAsJavascriptList = recipes.Select(x => $"{{ Name: \"{x.Name}\",\r\nLinkOrBook: \"{x.LinkOrBook}\", \r\nCuisine: \"{x.Cuisine}\", \r\nProtein: \"{x.Protein}\", \r\nCookingTimeInMinutes: {(string.IsNullOrEmpty(x.CookingTimeInMinutes) ? 0 : x.CookingTimeInMinutes)}, \r\nLink: \"{x.Link}\", \r\nIsOnlineRecipe: {(x.IsOnlineRecipe ? "true" : "false")}}}");
+            var recipesAsJavascript  = string.Join(",\n", recipesAsJavascriptList);
+
+            var script = templateScript.Replace("RECIPES = []", $"RECIPES = [{recipesAsJavascript}]");
+
+            OutputFile(fileName, script);
         }
+
         private void CreateStyleFile()
         {
             var fromPath = Path.Combine(Directory.GetCurrentDirectory(), "Templates/style.css");
