@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="A website to help decide what is for dinner">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <title>All Recipes</title>
+</head>
+<body>
+    <header class="center-all">
+        <div class="material-icons clickable header-icon" onclick="navigateToIndex()">home</div><span class="spacer"></span><h1>All Recipes</h1><span class="spacer"></span>
+    </header>
+    <main class="center-all-col">
+        <div>
+            Filter list by protein: 
+            <select id="proteinFilter" name="proteinFilter" onchange="filterList()">
+                <option value="Choose a protein">Choose a protein</option><option value="Beans">Beans</option><option value="Lentils">Lentils</option><option value="None">None</option><option value="Mushroom">Mushroom</option><option value="Cheese">Cheese</option><option value="Tofu">Tofu</option><option value="Hummus">Hummus</option>
+            </select>
+        </div>
+        <div class="recipe-list">
+            <ul id="recipeList">
+                <li data-protein="Beans"><a href="recipe0.html">Zucchini and butter bean fritters</a></li>
+<li data-protein="Beans"><a href="recipe1.html">Smoky white bean and tomato soup</a></li>
+<li data-protein="Lentils"><a href="recipe2.html">1-pot spiced sweet potato lentil soup</a></li>
+<li data-protein="Beans"><a href="recipe3.html">Vegetable enchiladas with a roasted tomato sauce</a></li>
+<li data-protein="None"><a href="recipe4.html">Sesame noodles</a></li>
+<li data-protein="Mushroom"><a href="recipe5.html">Polenta with spicy tomato-mushroom ragu</a></li>
+<li data-protein="None"><a href="recipe6.html">Bok choy and ginger-sesame udon noodles</a></li>
+<li data-protein="None"><a href="recipe7.html">roast pumpkin, caper and blue cheese pasta</a></li>
+<li data-protein="Mushroom"><a href="recipe8.html">butternut pumpkin pasta bake</a></li>
+<li data-protein="Cheese"><a href="recipe9.html">Baked creamy feta risoni</a></li>
+<li data-protein="Mushroom"><a href="recipe10.html">Giant pasta with mushroom sauce</a></li>
+<li data-protein="None"><a href="recipe11.html">pumpkin soup</a></li>
+<li data-protein="Beans"><a href="recipe12.html">Burritos</a></li>
+<li data-protein="Tofu"><a href="recipe13.html">Miso noodle soup</a></li>
+<li data-protein="Tofu"><a href="recipe14.html">mediterranian wraps</a></li>
+<li data-protein="Tofu"><a href="recipe15.html">Garlic fried rice</a></li>
+<li data-protein="Hummus"><a href="recipe16.html">Turkish bread, falafel and dip</a></li>
+<li data-protein="Tofu"><a href="recipe17.html">Poke bowl</a></li>
+<li data-protein="None"><a href="recipe18.html">Roast veggies</a></li>
+
+            </ul>
+        </div>
+    </main>
+    <footer>
+    </footer>
+    <script src="script.js"></script>
+</body>
+</html>

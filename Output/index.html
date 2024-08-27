@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="description" content="A website to help decide what is for dinner">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <title>What should Sarah eat?</title>
+</head>
+<body>
+    <header>
+        <div class="center-all">
+            <h1>What should Sarah eat?</h1>
+        </div>
+    </header>
+    <main>
+        <div class="center-all">
+            <div class="button-container">
+                <div>
+                    <button class="big-button" name="randomButton" onclick="navigateToRandomRecipe()"><div class="big-button-icon">?</div> <div>Random</div></button>
+                    <div>
+                        <div class="filter-box">
+                            Online recipes only: <input type="checkbox" id="hasLinkCheckbox" value="true"/>
+                        </div>
+                        <div class="filter-box">
+                            <select name="cuisineSelect" id="cuisineSelect">
+                                <option value="Choose a cuisine">Choose a cuisine</option><option value="Mediterranian">Mediterranian</option><option value="Soup">Soup</option><option value="Mexican">Mexican</option><option value="Asian">Asian</option><option value="Italian">Italian</option><option value="Pasta">Pasta</option><option value="Turkish">Turkish</option>
+                            </select>
+                        </div>
+                        <div class="filter-box">
+                            <select name="proteinSelect" id="proteinSelect">
+                                <option value="Choose a protein">Choose a protein</option><option value="Beans">Beans</option><option value="Lentils">Lentils</option><option value="None">None</option><option value="Mushroom">Mushroom</option><option value="Cheese">Cheese</option><option value="Tofu">Tofu</option><option value="Hummus">Hummus</option>
+                            </select>
+                        </div>
+                        <div class="filter-box">
+                            <select name="cookingTimeSelect" id="cookingTimeSelect">
+                                <option value="-1">Choose cooking time range</option>
+                                <option value="0, 20">20 minutes or less</option>
+                                <option value="21, 45">21 to 45 minutes</option>
+                                <option value="46, 90">46 to 90 minutes</option>
+                                <option value="90, 1000">more than 90 minutes</option>
+                            </select>
+                        </div>
+                    </div>
+                    <!-- Has link, Cuisine, Protein, cooking time <  -->
+                </div>
+                <div style="width:207px;">
+                    <button class="big-button" name="listButton" onclick="navigateToRecipeList()"><div><span class="material-icons big-button-icon">list</span></div><div>List</div></button>
+                    <div class="flex-grow"></div>
+                </div>
+            </div>
+        </div>
+    </main>
+    <footer>
+    </footer>
+    <script src="script.js"></script>
+</body>
+</html>
