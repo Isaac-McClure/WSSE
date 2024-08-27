@@ -5,22 +5,25 @@
     <meta name="description" content="A website to help decide what is for dinner">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="style.css">
-    <title>What should Sarah eat?</title>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <title>All Recipes</title>
 </head>
 <body>
-    <header>
-        <h1>What should Sarah eat?</h1>
+    <header class="center-all">
+        <div class="material-icons clickable header-icon" onclick="navigateToIndex()">home</div><span class="spacer"></span><h1>All Recipes</h1><span class="spacer"></span>
     </header>
-    <main>
+    <main class="center-all-col">
         <div>
             Filter list by protein: 
             <select id="proteinFilter" name="proteinFilter" onchange="filterList()">
                 {{ProteinOptionListGoesHere}}
             </select>
         </div>
-        <ul id="recipeList">
-            {{ListGoesHere}}
-        </ul>
+        <div class="recipe-list">
+            <ul id="recipeList">
+                {{ListGoesHere}}
+            </ul>
+        </div>
     </main>
     <footer>
     </footer>
